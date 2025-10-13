@@ -38,8 +38,8 @@ func RegisterUser(name, password, mail string) error {
 		return err
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, passwd, email, datereg, uuid, rules) VALUES (?, ?, ?, ?, ?, ?)",
-		name, hashedPassword, mail, time.Now(), gen_key(), 3)
+	_, err = db.Exec("INSERT INTO users (username, passwd, email, discordID, datereg, uuid, rules) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		name, hashedPassword, mail, " ", time.Now(), gen_key(), 3)
 	if err != nil {
 		return err
 	}

@@ -1,10 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>404 — Страница не найдена</title>
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <link href="assets/styles/reg_auth.css" rel="stylesheet">
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1a1a1a, #000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Krona One', sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .error-container {
+            text-align: center;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        .error-code {
+            font-size: 10rem;
+            text-shadow: 0 0 20px #33ae2a, 0 0 40px #00ff3c;
+            margin-bottom: 1rem;
+        }
+
+        .error-text {
+            font-size: 1.5rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            color: #fff;
+            background: transparent;
+            border: 2px solid #00ff3c;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #00ff6f;
+            color: #000;
+            box-shadow: 0 0 20px #00ff6e;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            color: #38c565;
+            background: transparent;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            animation: glitchTop 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00ff3c;
+            animation: glitchBottom 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitchTop {
+            0% { clip: rect(0, 9999px, 0, 0); }
+            5% { clip: rect(0, 9999px, 50px, 0); }
+            10% { clip: rect(0, 9999px, 0, 0); }
+            15% { clip: rect(10px, 9999px, 90px, 0); }
+            20% { clip: rect(0, 9999px, 0, 0); }
+        }
+
+        @keyframes glitchBottom {
+            0% { clip: rect(0, 9999px, 0, 0); }
+            5% { clip: rect(50px, 9999px, 100px, 0); }
+            10% { clip: rect(0, 9999px, 0, 0); }
+            15% { clip: rect(70px, 9999px, 120px, 0); }
+            20% { clip: rect(0, 9999px, 0, 0); }
+        }
+    </style>
 </head>
 <body>
-
+<div class="error-container">
+    <div class="error-code glitch" data-text="404">404</div>
+    <div class="error-text">Упс... страница улетела в чёрную дыру 🌌</div>
+    <a href="/" class="back-button">Вернуться на главную</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

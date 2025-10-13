@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"src/api/database"
 	"src/api/user_operation"
 )
 
@@ -151,6 +152,56 @@ func authHandle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session")
+	session.Options.MaxAge = -1
+	session.Save(r, w)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func profileHandler(w http.ResponseWriter, r *http.Request) {
+	// Получаем сессию
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Ошибка сессии", http.StatusInternalServerError)
+		return
+	}
+
+	// Проверяем, залогинен ли пользователь
+	username, ok := session.Values["username"].(string)
+	if !ok || username == "" {
+		// Если нет — редиректим на страницу авторизации
+		http.Redirect(w, r, "/auth", http.StatusSeeOther)
+		return
+	}
+
+	db := database.InitDB()
+	defer db.Close()
+
+	profile, err := user_operation.GetUserProfile(db, username)
+	if err != nil {
+		log.Printf("Не удалось получить профиль %s: %v", username, err)
+		http.Error(w, "Профиль не найден", http.StatusNotFound)
+		return
+	}
+
+	datas := map[string]interface{}{
+		"isLoggedIn": true,
+		"username":   profile.Nickname,
+		"email":      profile.Email,
+		"rules":      profile.Rules,
+		//"date":       profile.DateRegistry.Format("02.01.2006 15:04"),
+		"uuid":    profile.UUID,
+		"discord": profile.Discord,
+	}
+
+	// Рендерим профиль
+	if err := tpl.ExecuteTemplate(w, "profile.html", datas); err != nil {
+		http.Error(w, "Ошибка при рендере страницы", http.StatusInternalServerError)
+	}
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -169,6 +220,8 @@ func main() {
 	mux.HandleFunc("/notFound", notFoundPage)
 	mux.HandleFunc("/register", regHandle)
 	mux.HandleFunc("/auth", authHandle)
+	mux.HandleFunc("/logout", logoutHandler)
+	mux.HandleFunc("/profile", profileHandler)
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h, pattern := mux.Handler(r)
