@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+          crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <link href="/assets/css/profile.css" rel="stylesheet">
+</head>
+<body>
+<div class="blob big"></div>
+<div class="blob small"></div>
+
+<div class="profile-card">
+    <h1>{{.username}}</h1>
+    <div class="profile-info">
+        <p><strong>Email:</strong> <span>{{.email}}</span></p>
+        <p><strong>Discord:</strong> <span>{{.discord}}</span></p>
+        <p><strong>UUID:</strong> <span>{{.uuid}}</span></p>
+        <p><strong>RULES:</strong> <span>{{.rules}}</span></p>
+    </div>
+    <div class="button-container">
+        <a href="/" class="button-profile">Назад</a>
+        <a href="/logout" class="button-profile">Выйти</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+</body>
+</html>

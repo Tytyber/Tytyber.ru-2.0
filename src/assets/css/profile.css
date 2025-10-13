@@ -1,0 +1,104 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0c2919, #191919, #243e2e);
+    color: #fff;
+    font-family: 'Krona One', sans-serif;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+    z-index: 0;
+    animation: float 8s ease-in-out infinite;
+}
+
+.blob.big {
+    width: 600px;
+    height: 600px;
+    background: #00f431;
+    top: -100px;
+    left: -100px;
+}
+
+.blob.small {
+    width: 400px;
+    height: 400px;
+    background: #00f46a;
+    bottom: -100px;
+    right: -100px;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-40px) translateX(20px); }
+    100% { transform: translateY(0) translateX(0); }
+}
+
+.profile-card {
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 60, 0.2);
+}
+
+.profile-card h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #00f44d;
+    text-shadow: 0 0 10px #00f46a;
+}
+
+.profile-info {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.profile-info p {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #e0e0e0;
+}
+
+.profile-info span {
+    color: #00f431;
+    text-shadow: 0 0 10px #00f455;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-profile {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: 2px solid #00f431;
+    border-radius: 8px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.button-profile:hover {
+    background: #00f46a;
+    color: #000;
+    box-shadow: 0 0 15px #00f439;
+}
