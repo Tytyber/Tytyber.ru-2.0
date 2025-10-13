@@ -25,7 +25,7 @@ func RegisterUser(name, password, mail string) error {
 	defer db.Close()
 
 	var exists int
-	err := db.QueryRow("SELECT COUNT(*) FROM users WHERE name = ?", name).Scan(&exists)
+	err := db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ?", name).Scan(&exists)
 	if err != nil && err != sql.ErrNoRows {
 		return err
 	}
@@ -38,7 +38,7 @@ func RegisterUser(name, password, mail string) error {
 		return err
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, passwd, email, datereg, uuid, rules) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	_, err = db.Exec("INSERT INTO users (username, passwd, email, datereg, uuid, rules) VALUES (?, ?, ?, ?, ?, ?)",
 		name, hashedPassword, mail, time.Now(), gen_key(), 3)
 	if err != nil {
 		return err

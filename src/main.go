@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"src/api/user_operation"
 )
 
 var tpl *template.Template
@@ -90,6 +91,66 @@ func forbiddenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func regHandle(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		err := tpl.ExecuteTemplate(w, "registration.html", nil)
+		if err != nil {
+			http.Error(w, "Ошибка при рендере страницы", http.StatusInternalServerError)
+		}
+	case http.MethodPost:
+		name := r.FormValue("username")
+		mail := r.FormValue("email")
+		password := r.FormValue("password")
+
+		err := user_operation.RegisterUser(name, password, mail)
+		if err != nil {
+			log.Println("Ошибка регистрации:", err)
+			http.Error(w, "Ошибка регистрации: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		http.Redirect(w, r, "/auth", http.StatusSeeOther)
+	default:
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+	}
+}
+
+func authHandle(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		err := tpl.ExecuteTemplate(w, "auth.html", nil)
+		if err != nil {
+			http.Error(w, "Ошибка при рендере страницы", http.StatusInternalServerError)
+		}
+	case http.MethodPost:
+		name := r.FormValue("username")
+		password := r.FormValue("password")
+
+		rules, err := user_operation.AuthenticateUser(name, password)
+		if err != nil {
+			log.Println("Ошибка авторизации:", err)
+			http.Error(w, "Неверный логин или пароль", http.StatusUnauthorized)
+			return
+		}
+
+		// Сохраняем сессию
+		session, _ := store.Get(r, "session")
+		session.Values["username"] = name
+		session.Values["rules"] = rules
+		err = session.Save(r, w)
+		if err != nil {
+			log.Println("Ошибка сохранения сессии:", err)
+			http.Error(w, "Ошибка сессии", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	default:
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+	}
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -105,6 +166,9 @@ func main() {
 
 	mux.HandleFunc("/", indexHandler)
 	mux.HandleFunc("/forbidden", forbiddenHandler)
+	mux.HandleFunc("/notFound", notFoundPage)
+	mux.HandleFunc("/register", regHandle)
+	mux.HandleFunc("/auth", authHandle)
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h, pattern := mux.Handler(r)

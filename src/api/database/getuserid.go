@@ -9,7 +9,7 @@ import (
 func GetUserIDByUsername(db *sql.DB, username string) (int, error) {
 	var userID int
 
-	query := "SELECT userid FROM users WHERE username = ? LIMIT 1"
+	query := "SELECT id FROM users WHERE username = ? LIMIT 1"
 
 	err := db.QueryRow(query, username).Scan(&userID)
 	if err != nil {

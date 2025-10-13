@@ -4,39 +4,42 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
 
 func InitDB() *sql.DB {
-	dbUsername, ok := os.LookupEnv("DB_USERNAME")
-	if !ok {
-		log.Fatal("Не указана переменная окружения DB_USERNAME")
+	// Загружаем .env файл
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("Предупреждение: .env файл не найден: %v", err)
 	}
 
-	dbPassword, ok := os.LookupEnv("DB_PASSWORD")
-	if !ok {
-		log.Fatal("Не указана переменная окружения DB_PASSWORD")
-	}
+	// Отладочная информация
+	log.Println("=== ПРОВЕРКА ПЕРЕМЕННЫХ ОКРУЖЕНИЯ ===")
+	log.Printf("DB_USERNAME: %s", os.Getenv("DB_USERNAME"))
+	log.Printf("DB_PASSWORD: %s", os.Getenv("DB_PASSWORD"))
+	log.Printf("DB_NAME: %s", os.Getenv("DB_NAME"))
+	log.Println("=====================================")
 
-	dbName, ok := os.LookupEnv("DB_NAME")
-	if !ok {
-		log.Fatal("Не указана переменная окружения DB_NAME")
-	}
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbIP := os.Getenv("DB_IP")
 
-	// Задаём параметры подключения: юзер, пароль, хост, порт, имя базы
-	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?parseTime=true",
-		dbUsername, dbPassword, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?parseTime=true",
+		dbUsername, dbPassword, dbIP, dbName)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("Ошибка при открытии соединения с MySQL:", err)
 	}
 
-	// Проверим, что база реально доступна
 	if err := db.Ping(); err != nil {
 		log.Fatal("MySQL не отвечает:", err)
 	}
 
+	log.Println("✅ Успешное подключение к базе данных")
 	return db
 }
