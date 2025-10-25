@@ -1,104 +1,159 @@
 body {
-    min-height: 100vh;
+    background-color: #0f0f0f;
+    color: #d4d4d4;
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden; /* важно! предотвращает горизонтальный скролл */
+}
+
+/* ==== ЛЕВАЯ ПАНЕЛЬ ==== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 100vh;
+    background-color: rgba(0, 35, 15, 0.95);
+    border-right: 1px solid #00ff88;
+    box-shadow: 2px 0 15px rgba(0, 255, 136, 0.15);
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background: linear-gradient(135deg, #0c2919, #191919, #243e2e);
-    color: #fff;
-    font-family: 'Krona One', sans-serif;
-}
-
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.5;
-    z-index: 0;
-    animation: float 8s ease-in-out infinite;
-}
-
-.blob.big {
-    width: 600px;
-    height: 600px;
-    background: #00f431;
-    top: -100px;
-    left: -100px;
-}
-
-.blob.small {
-    width: 400px;
-    height: 400px;
-    background: #00f46a;
-    bottom: -100px;
-    right: -100px;
-    animation-delay: 4s;
-}
-
-@keyframes float {
-    0% { transform: translateY(0) translateX(0); }
-    50% { transform: translateY(-40px) translateX(20px); }
-    100% { transform: translateY(0) translateX(0); }
-}
-
-.profile-card {
-    position: relative;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 40px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0, 255, 60, 0.2);
-}
-
-.profile-card h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #00f44d;
-    text-shadow: 0 0 10px #00f46a;
-}
-
-.profile-info {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.profile-info p {
-    font-size: 1rem;
-    margin: 10px 0;
-    color: #e0e0e0;
-}
-
-.profile-info span {
-    color: #00f431;
-    text-shadow: 0 0 10px #00f455;
-}
-
-.button-container {
-    display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
-    margin-top: 20px;
+    padding: 20px 10px;
+    z-index: 10;
 }
 
-.button-profile {
-    flex: 1;
-    padding: 10px;
-    background: transparent;
-    border: 2px solid #00f431;
-    border-radius: 8px;
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: 0.3s;
+.sidebar h3 {
+    color: #00ff88;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.sidebar .nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar a {
+    background: #00ff88;
+    border: 1px solid #00ff88;
+    color: #000000;
+    border-radius: 6px;
+    padding: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
     text-decoration: none;
 }
 
-.button-profile:hover {
-    background: #00f46a;
-    color: #000;
-    box-shadow: 0 0 15px #00f439;
+.sidebar a:hover {
+    background-color: #00ff88;
+    color: #ffffff;
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+.sidebar small {
+    color: #7affb4;
+    text-align: center;
+    opacity: 0.75;
+    font-size: 0.75rem;
+}
+
+/* ==== ОСНОВНОЙ КОНТЕНТ ==== */
+.profile-container {
+    margin-left: 190px; /* под размер панели */
+    padding: 40px 20px;
+    max-width: calc(100vw - 190px);
+    box-sizing: border-box;
+}
+
+/* === карточка === */
+.card-bank {
+    background: linear-gradient(135deg, #00ff88 0%, #007a3d 100%);
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+    padding: 25px;
+    height: 240px;
+    overflow: hidden;
+}
+
+.card-bank h5 {
+    font-weight: 600;
+}
+
+.card-bank .balance {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* === инфо === */
+.info-card {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+    word-wrap: break-word;
+}
+
+.info-card h4 {
+    color: #00ff88;
+    border-bottom: 1px solid #00ff88;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    margin-bottom: 15px;
+}
+
+.info-item span {
+    color: #a1a1a1;
+}
+
+.wallet-id {
+    font-family: monospace;
+    color: #9effb7;
+}
+
+/* ==== АДАПТИВКА ==== */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 150px;
+    }
+    .profile-container {
+        margin-left: 160px;
+        padding: 25px 15px;
+        max-width: calc(100vw - 160px);
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid #00ff88;
+        box-shadow: 0 2px 15px rgba(0, 255, 136, 0.15);
+    }
+    .sidebar h3 {
+        font-size: 1rem;
+    }
+    .sidebar .nav-buttons {
+        flex-direction: row;
+        gap: 6px;
+    }
+    .profile-container {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 20px;
+    }
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"html/template"
@@ -192,14 +193,42 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		"email":      profile.Email,
 		"rules":      profile.Rules,
 		//"date":       profile.DateRegistry.Format("02.01.2006 15:04"),
-		"uuid":    profile.UUID,
-		"discord": profile.Discord,
+		"uuid":     profile.UUID,
+		"discord":  profile.Discord,
+		"walletId": profile.WaletID,
+		"money":    profile.Money,
 	}
 
 	// Рендерим профиль
 	if err := tpl.ExecuteTemplate(w, "profile.html", datas); err != nil {
 		http.Error(w, "Ошибка при рендере страницы", http.StatusInternalServerError)
 	}
+}
+
+func EditDiscordHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var data struct {
+		Discord  string `json:"discord"`
+		Username string `json:"username"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+		http.Error(w, "Невалидный JSON", http.StatusBadRequest)
+		return
+	}
+
+	err := user_operation.Edit_discord(data.Discord, data.Username)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Ошибка обновления: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
 }
 
 func main() {
@@ -222,6 +251,7 @@ func main() {
 	mux.HandleFunc("/auth", authHandle)
 	mux.HandleFunc("/logout", logoutHandler)
 	mux.HandleFunc("/profile", profileHandler)
+	mux.HandleFunc("/edit_discord", EditDiscordHandler)
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h, pattern := mux.Handler(r)
