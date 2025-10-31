@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"src/api"
 	"src/api/database"
 	"src/api/user_operation"
 )
@@ -252,6 +253,8 @@ func main() {
 	mux.HandleFunc("/logout", logoutHandler)
 	mux.HandleFunc("/profile", profileHandler)
 	mux.HandleFunc("/edit_discord", EditDiscordHandler)
+	mux.HandleFunc("/auth/login", api.LoginHandler)
+	mux.HandleFunc("/auth/register", api.RegisterHandler)
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h, pattern := mux.Handler(r)
